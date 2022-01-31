@@ -1,0 +1,29 @@
+{
+  "name": "board_project",
+  "version": "1.0.0",
+  "description": "let's make simple board project using node.js & mongo",
+  "main": "init.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DevelopJKong/board-project-project.git"
+  },
+  "author": "DevelopJKong",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DevelopJKong/board-project-project/issues"
+  },
+  "homepage": "https://github.com/DevelopJKong/board-project-project#readme",
+  "dependencies": {
+    "express": "^4.17.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.12",
+    "@babel/node": "^7.16.8",
+    "@babel/preset-env": "^7.16.11",
+    "nodemon": "^2.0.15"
+  }
+}
