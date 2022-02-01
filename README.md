@@ -7,7 +7,30 @@
     3. 디비 => mongodb
     4. 배포 => heroku
 
+## API 설계
+<hr>
+
+[exception]
+1. / -> home
+2. /join -> Join
+3. /login -> Login
+4. /search -> Search
+
+<hr>
+
+[user]
+1. /users/:id -> See Users
+2. /users/edit -> Edit Users
+3. /users/delete -> Delete Users
+
+[board]
+1. /board/:id -> See Board
+2. /board/:id/edit -> Edit Board
+3. /board/:id/delete -> Delete Board
+4. /board/write -> Write Board
+
 
 ### 진행여부
-    2022.01.31
-        - 프로젝트 시작 => npm init & init.js로 서버 열기
+* 2022.01.31
+    - 프로젝트 시작 => npm init & init.js로 서버 열기
+
