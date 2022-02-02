@@ -18,6 +18,7 @@
   "homepage": "https://github.com/DevelopJKong/board-project-project#readme",
   "dependencies": {
     "express": "^4.17.2",
+    "morgan": "^1.10.0",
     "pug": "^3.0.2"
   },
   "devDependencies": {

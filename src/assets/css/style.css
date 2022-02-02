@@ -1,0 +1,22 @@
+.footer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 100px;
+  margin-bottom: 50px;
+}
+.content-box {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin: 50px 0;
+}
+.card {
+  margin: 20px auto;
+  border-radius: 2.2222rem;
+}
+.card img {
+  border-top-right-radius: 2.2222rem;
+  border-top-left-radius: 2.2222rem;
+}
