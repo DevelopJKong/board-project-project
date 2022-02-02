@@ -1,7 +1,7 @@
 import express from "express";
 import { home,search } from "../controllers/boardController";
 import { join,login } from "../controllers/userController";
-const globalRouter = express();
+const globalRouter = express.Router();
 
 globalRouter.get("/",home);
 globalRouter.get("/join",join);

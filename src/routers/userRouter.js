@@ -1,7 +1,7 @@
 import express from "express";
 import { see , edit, remove } from "../controllers/userController";
 
-const userRouter = express();
+const userRouter = express.Router();
 
 userRouter.get("/edit",edit);
 userRouter.get("/delete",remove);
