@@ -20,3 +20,14 @@
   border-top-right-radius: 2.2222rem;
   border-top-left-radius: 2.2222rem;
 }
+.login-form-wrapper {
+  display:flex;
+  width:100%;
+  justify-content: center;
+  align-items: center;
+  margin-top:100px;
+}
+
+.login-form-wrapper .login-form {
+  width:80%;
+}

@@ -1,0 +1,26 @@
+extends base
+block content
+    div.login-form-wrapper
+        div.login-form
+            h3 ☕Login
+            form.row.g-3
+                div.col-md-6
+                    label(for="inputUser").form-label User name
+                    input(type="text" placeholder="User name" name="username").form-control#inputUser
+                div.col-md-6
+                    label(for="inputNickname").form-label Nickname
+                    input(type="text" placeholder="Nickname" name="nickname").form-control#inputNickname
+                div.col-12
+                    label(for="inputPassword").form-label Password
+                    input(type="password" placeholder="Password" name="password").form-control#inputAddress
+                div.col-12
+                    label(for="inputPasswordConfirm").form-label Confirmation Password
+                    input(type="text" placeholder="Confirmation Password" name="password2").form-control#inputAddress2
+                div.col-12
+                    label(for="inputEmail").form-label Email
+                    input(type="email" placeholder="Email" name="email").form-control#inputEmail
+                div.col-12
+                    label(for="inputRegion").form-label Region
+                    input(type="email" placeholder="Region" name="region").form-control#inputRegion
+                div.col-12
+                    button(type="submit").btn.btn-primary Sign in

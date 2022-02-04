@@ -3,7 +3,11 @@ export const join = (req,res) => {
 }
 
 export const login = (req,res) => {
-    return res.send("Search ☕");
+    return res.render("login");
+}
+
+export const logout = (req,res) => {
+    return res.send("Log out ☕");
 }
 
 export const see = (req,res) => {

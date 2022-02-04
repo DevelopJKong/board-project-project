@@ -22,6 +22,7 @@
 1. /users/:id -> See Users
 2. /users/edit -> Edit Users
 3. /users/delete -> Delete Users
+4. /users/logout -> Log out
 
 [board]
 1. /board/:id -> See Board
@@ -37,4 +38,6 @@
     - api 설계 완료
 * 2022.02.02
     - router 문제 수정 및 bootstrap 적용
+* 2022.02.04
+    - carousel 문제 수정 , login page 완료
 
