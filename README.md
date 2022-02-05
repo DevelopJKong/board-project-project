@@ -40,4 +40,6 @@
     - router 문제 수정 및 bootstrap 적용
 * 2022.02.04
     - carousel 문제 수정 , login page 완료
+* 2022.02.06
+    - mixin 만들기, 가짜 데이터 생성, watch page 및 edit page 완료
 

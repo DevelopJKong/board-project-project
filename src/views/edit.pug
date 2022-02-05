@@ -1,0 +1,18 @@
+extends base
+block content
+    div.board-form-wrapper
+        div.board-form
+            h3.title-name Watch    
+            div.col-12
+                label(for="inputTitle").form-label 📝Board Title
+                input(type="text" placeholder="Title" name="titleName" value=board.title disabled).form-control#inputTitle
+            br
+            div.col-12
+                label(for="inputText").form-label 🎄Image URL
+                input(type="text" placeholder="Text" name="contentText" value=board.imgUrl disabled).form-control#inputText
+            br
+            p.board-title--text ⛳ Textarea
+            div.input-group 
+                span.input-group-text Textarea
+                textarea(aria-label="With textarea" disabled).form-control=board.text
+

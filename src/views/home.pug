@@ -1,13 +1,16 @@
 extends base
+include mixins/card
 
 block content
     include partials/carousel
+    div.carousel-wrapper
+        div.carousel-content
+            include partials/carousel2
     div.content-box
-        include partials/card
-        include partials/card
-        include partials/card
-        include partials/card
-        include partials/card
-        include partials/card
-        include partials/card
-        include partials/card
+        each board in boards 
+            +boardMixins(board)
+        else
+            span 아직 게시물이 없어요 🙄
+    div.carousel-wrapper
+        div.carousel-content
+            include partials/carousel2

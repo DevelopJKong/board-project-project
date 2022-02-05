@@ -2,7 +2,7 @@ extends base
 block content
     div.login-form-wrapper
         div.login-form
-            h3 ☕Login
+            h3.title-name ☕Login
             form.row.g-3
                 div.col-md-6
                     label(for="inputUser").form-label User name
@@ -15,12 +15,12 @@ block content
                     input(type="password" placeholder="Password" name="password").form-control#inputAddress
                 div.col-12
                     label(for="inputPasswordConfirm").form-label Confirmation Password
-                    input(type="text" placeholder="Confirmation Password" name="password2").form-control#inputAddress2
+                    input(type="password" placeholder="Confirmation Password" name="password2").form-control#inputAddress2
                 div.col-12
                     label(for="inputEmail").form-label Email
                     input(type="email" placeholder="Email" name="email").form-control#inputEmail
                 div.col-12
                     label(for="inputRegion").form-label Region
-                    input(type="email" placeholder="Region" name="region").form-control#inputRegion
+                    input(type="text" placeholder="Region" name="region").form-control#inputRegion
                 div.col-12
                     button(type="submit").btn.btn-primary Sign in

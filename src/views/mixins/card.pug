@@ -1,6 +1,7 @@
-mixin cardMixins(board)
-    img(src="/image/Node.js.png" alt="logo" height="200").card-img-top
+mixin boardMixins(board)
+    div(style="width: 18rem;").card
+        img(src=`${board.imgUrl}` alt="logo" height="200").card-img-top
         div.card-body
-            h5.card-title Node.js Project
-            p.card-text 안녕하세요! Node.js simple project 입니다 📝
-            a(href="#").btn.btn-primary See more
+            h5.card-title=board.title
+            p.card-text=board.text
+            a(href=`board/${board.id}/edit`).btn.btn-primary See more

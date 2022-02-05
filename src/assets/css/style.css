@@ -1,3 +1,6 @@
+@import url("./reset.css");
+
+/* home */
 .footer {
   width: 100%;
   display: flex;
@@ -20,14 +23,66 @@
   border-top-right-radius: 2.2222rem;
   border-top-left-radius: 2.2222rem;
 }
+.card-text {
+  margin: 10px 0;
+
+}
+
+.carousel-wrapper {
+  display:flex;
+  width:100%;
+  justify-content: center;
+  align-items: center;
+  margin-top:40px;
+}
+.carousel-content {
+  width:80%;
+}
+
+
+/* login */
 .login-form-wrapper {
   display:flex;
   width:100%;
   justify-content: center;
   align-items: center;
-  margin-top:100px;
+  margin-top:40px;
 }
 
 .login-form-wrapper .login-form {
   width:80%;
 }
+
+.login-form-wrapper .title-name {
+  font-size:24px;
+  margin-bottom:20px;
+}
+
+/* board */
+
+.board-form-wrapper {
+  display:flex;
+  width:100%;
+  justify-content: center;
+  align-items: center;
+  margin-top:40px;
+}
+
+.board-form-wrapper .board-form {
+  width:80%;
+}
+.board-title--text {
+  margin: 30px 0;
+}
+.board-form .input-group {
+  height:25em;
+}
+
+.board-form-wrapper .title-name {
+  font-size:24px;
+  margin-bottom:20px;
+}
+
+
+
+
