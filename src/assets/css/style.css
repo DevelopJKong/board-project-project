@@ -83,6 +83,15 @@
   margin-bottom:20px;
 }
 
+.center-box {
+  width:100%;
+  text-align: center;
+}
+.end-box {
+  width:100%;
+  text-align: end;
+}
+
 
 
 

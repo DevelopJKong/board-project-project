@@ -1,15 +1,17 @@
 import express from "express";
 import {
   seeBoard,
-  editBoard,
+  getEditBoard,
   deleteBoard,
-  writeBoard,
+  getWriteBoard,
+  postWriteBoard,
+  postEditBoard,
 } from "../controllers/boardController";
 const boardRouter = express.Router();
 
-boardRouter.get("/write", writeBoard);
+boardRouter.route("/write").get(getWriteBoard).post(postWriteBoard);
 boardRouter.get("/:id", seeBoard);
-boardRouter.get("/:id/edit", editBoard);
+boardRouter.route("/:id/edit").get(getEditBoard).post(postEditBoard);
 boardRouter.get("/:id/delete", deleteBoard);
 
 export default boardRouter;
