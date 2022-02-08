@@ -1,11 +1,13 @@
 extends base
 block content
     div.board-form-wrapper
+        if errorMessage
+            span=errorMessage
         form(method="POST").board-form
-            h3.title-name Watch    
+            h3.title-name=pageTitle
             div.col-12
                 label(for="inputTitle").form-label 📝Board Title
-                input(type="text" placeholder="Title" name="title" required).form-control#inputTitle
+                input(type="text" placeholder="Title" name="title" required maxLength=30).form-control#inputTitle
             br
             div.col-12
                 label(for="inputText").form-label 🎄Image URL
@@ -14,6 +16,6 @@ block content
             p.board-title--text ⛳ Textarea
             div.input-group 
                 span.input-group-text Textarea
-                textarea(aria-label="With textarea" name="content" required).form-control
+                textarea(aria-label="With textarea" name="content" required maxLength=300).form-control
             br
             input(type="submit" value="Write Board").btn.btn-primary

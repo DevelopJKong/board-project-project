@@ -19,6 +19,10 @@
   margin: 20px auto;
   border-radius: 2.2222rem;
 }
+
+
+
+
 .card img {
   border-top-right-radius: 2.2222rem;
   border-top-left-radius: 2.2222rem;
@@ -38,6 +42,16 @@
 .carousel-content {
   width:80%;
 }
+
+/*card detail page*/
+.card-detail {
+  margin: 50px auto;
+}
+.margin-right {
+  margin-right:5px;
+}
+
+
 
 
 /* login */

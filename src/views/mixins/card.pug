@@ -3,5 +3,5 @@ mixin boardMixins(board)
         img(src=`${board.imgUrl}` alt="logo" height="200").card-img-top
         div.card-body
             h5.card-title=board.title
-            p.card-text=board.text
-            a(href=`board/${board.id}/edit`).btn.btn-primary See more
+            p.card-text=board.content
+            a(href=`board/${board.id}`).btn.btn-primary See more

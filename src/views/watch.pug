@@ -1,17 +1,14 @@
 extends base
-block content
-    div.board-form-wrapper
-        div.board-form
-            h3.title-name Watch    
-            div.col-12
-                label(for="inputTitle").form-label 📝Board Title
-                input(type="text" placeholder="Title" name="titleName").form-control#inputTitle
+
+block content 
+        div(style="width: 32rem;").card-detail
+            h2 #{pageTitle} ☕
             br
-            div.col-12
-                label(for="inputText").form-label 🎄Image URL
-                input(type="text" placeholder="Text" name="contentText").form-control#inputText
-            br
-            p.board-title--text ⛳ Textarea
-            div.input-group 
-                span.input-group-text Textarea
-                textarea(aria-label="With textarea").form-control
+            hr
+            img(src=`${board.imgUrl}` alt="logo" height="300").card-img-top
+            div.card-body
+                h5.card-title=board.title
+                p.card-text=board.content
+                a(href="/").btn.btn-primary.margin-right Home
+                a(href=`${board.id}/edit`).btn.btn-warning.margin-right Edit
+                a(href=`${board.id}/delete`).btn.btn-danger Delete

@@ -42,4 +42,6 @@
     - carousel 문제 수정 , login page 완료
 * 2022.02.06
     - mixin 만들기, 가짜 데이터 생성, watch page 및 edit page 완료
+* 2022.02.07
+    - schema, model 생성 및 watch page => write page 로 수정
 

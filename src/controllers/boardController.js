@@ -1,8 +1,9 @@
+import { render } from "pug";
 import Board from "../models/Board";
 
 export const home = async (req, res) => {
   const { id } = req.params;
-  const boards = await Board.find(id);
+  const boards = await Board.find({}); // find vs findById
   return res.render("home", { boards });
 };
 
@@ -10,18 +11,32 @@ export const search = (req, res) => {
   return res.send("Search ☕");
 };
 
-export const seeBoard = (req, res) => {
-  return res.render("watch");
+export const seeBoard = async (req, res) => {
+  const { id } = req.params;
+  const board = await Board.findById(id);
+  if (!board) {
+    return res.render("404", { pageTitle: "Page Not Found" });
+  }
+  return res.render("watch", { board, pageTitle: "Watch" });
 };
 
 export const getEditBoard = async (req, res) => {
   const { id } = req.params;
-  const boards = await Board.find(id);
-  return res.render("edit", { boards });
+  const board = await Board.findById(id);
+  if (!board) {
+    return res.render("404", { pageTitle: "Page Not Found" });
+  }
+  return res.render("edit", { board, pageTitle: "Edit" });
 };
-export const postEditBoard = (req, res) => {
+export const postEditBoard = async (req, res) => {
   const { id } = req.params;
-  return res.render("edit");
+  const { title, imgUrl, content } = req.body;
+  const board = await Board.findById(id);
+  if (!board) {
+    return res.render("404", { pageTitle: "Page Not Found" });
+  }
+  await Board.findByIdAndUpdate(id, { title, imgUrl, content });
+  return res.redirect(`/board/${id}`);
 };
 
 export const getWriteBoard = (req, res) => {
@@ -30,20 +45,25 @@ export const getWriteBoard = (req, res) => {
 
 export const postWriteBoard = async (req, res) => {
   const { title, imgUrl, content } = req.body;
-  const board = new Board({
-    title,
-    imgUrl,
-    content,
-    createAt: Date.now(),
-    meta: {
-      views: 0,
-      rating: 0,
-    },
-  });
-  await board.save();
-  return res.redirect("/");
+
+  try {
+    await Board.create({
+      title,
+      imgUrl,
+      content,
+    });
+    return res.redirect("/");
+  } catch (error) {
+    return render("write", {
+      errorMessage: error._message,
+      pageTitle: "Write",
+    });
+  }
 };
 
-export const deleteBoard = (req, res) => {
-  return res.send("Delete Board ☕");
+export const getDeleteBoard = async(req, res) => {
+  const { id } = req.params;
+  await Board.findByIdAndDelete(id);
+  return res.redirect("/");
+
 };
