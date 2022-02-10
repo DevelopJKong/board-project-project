@@ -44,4 +44,7 @@
     - mixin 만들기, 가짜 데이터 생성, watch page 및 edit page 완료
 * 2022.02.07
     - schema, model 생성 및 watch page => write page 로 수정
+* 2022.02.09
+    - edit page & watch page & 스키마 수정 & edit,watch,delete 기능 구현, card 수정,404 페이지 구
+현 02.09 완료
 

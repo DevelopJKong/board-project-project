@@ -7,7 +7,13 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-light
         div.collapse.navbar-collapse#navbarNavAltMarkup
             div.navbar-nav
                 a(aria-current="page" href="/").nav-link.active Home
-                a(href="/login").nav-link Login
+                if loggedIn
+                    a(href="/users/logout").nav-link.active Logout
+                    a(href="/profile" style="color:var(--bs-primary);").nav-link.active #{loggedInUser.username} Profile ☕
+                else
+                    a(href="/Login").nav-link.active Login
+                a(href="/join").nav-link Join
                 a(href="/board/write").nav-link Write
+                a(href="/search").nav-link Search
                 //- a(href="/search").nav-link Write
                 //- a(href="#").nav-link.disabled Disabled

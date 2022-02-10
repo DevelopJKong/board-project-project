@@ -3,15 +3,24 @@ import Board from "../models/Board";
 
 export const home = async (req, res) => {
   const { id } = req.params;
-  const boards = await Board.find({}); // find vs findById
+  const boards = await Board.find({}).sort({ createdAt: "desc" }); // find vs findById
   return res.render("home", { boards });
 };
 
-export const search = (req, res) => {
-  return res.send("Search ☕");
+export const search = async(req, res) => {
+  const { keyword } = req.query;
+  let boards = [];
+  if(keyword) {
+    boards = await Board.find({
+      title: {
+        $regex: new RegExp(keyword,"i")
+      },
+    });
+  }
+  return res.render("search",{boards});
 };
 
-export const seeBoard = async (req, res) => {
+export const getSeeBoard = async (req, res) => {
   const { id } = req.params;
   const board = await Board.findById(id);
   if (!board) {
@@ -54,16 +63,15 @@ export const postWriteBoard = async (req, res) => {
     });
     return res.redirect("/");
   } catch (error) {
-    return render("write", {
+    return res.status(400).render("write", {
       errorMessage: error._message,
       pageTitle: "Write",
     });
   }
 };
 
-export const getDeleteBoard = async(req, res) => {
+export const getDeleteBoard = async (req, res) => {
   const { id } = req.params;
   await Board.findByIdAndDelete(id);
   return res.redirect("/");
-
 };
