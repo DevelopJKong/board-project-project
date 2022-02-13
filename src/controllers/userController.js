@@ -80,3 +80,60 @@ export const edit = (req, res) => {
 export const remove = (req, res) => {
   return res.send("Delete Users ☕");
 };
+
+const config = {
+  client_id: process.env.NAVER_CLIENT_ID,
+  client_secret: process.env.NAVER_CLIENT_SECRET,
+  state: process.env.RANDOM_STATE,
+  redirectURI: encodeURI(`${process.env.MY_CALLBACK_URL}`),
+  api_url: "",
+};
+
+export const naverLogin = (req, res) => {
+  config.api_url =
+    "https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=" +
+    config.client_id +
+    "&redirect_uri=" +
+    config.redirectURI +
+    "&state=" +
+    config.state;
+  res.writeHead(200, { "Content-Type": "text/html;charset=utf-8" });
+  res.end(
+    "<a href='" +
+      config.api_url +
+      "'><img height='50' src='http://static.nid.naver.com/oauth/small_g_in.PNG'/></a>"
+  );
+};
+
+export const naverCallback = (req, res) => {
+  code = req.query.code;
+  config.state = req.query.state;
+  config.api_url =
+    "https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id=" +
+    config.client_id +
+    "&client_secret=" +
+    config.client_secret +
+    "&redirect_uri=" +
+    config.redirectURI +
+    "&code=" +
+    config.code +
+    "&state=" +
+    config.state;
+  let request = require("request");
+  let options = {
+    url: config.api_url,
+    headers: {
+      "X-Naver-Client-Id": config.client_id,
+      "X-Naver-Client-Secret": config.client_secret,
+    },
+  };
+  request.get(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.writeHead(200, { "Content-Type": "text/json;charset=utf-8" });
+      res.end(body);
+    } else {
+      res.status(response.statusCode).end();
+      console.log("error = " + response.statusCode);
+    }
+  });
+};

@@ -10,5 +10,6 @@ block content
                 h5.card-title=board.title
                 p.card-text=board.content
                 a(href="/").btn.btn-primary.margin-right Home
-                a(href=`${board.id}/edit`).btn.btn-warning.margin-right Edit
-                a(href=`${board.id}/delete`).btn.btn-danger Delete
+                if loggedIn
+                    a(href=`${board.id}/edit`).btn.btn-warning.margin-right Edit
+                    a(href=`${board.id}/delete`).btn.btn-danger Delete

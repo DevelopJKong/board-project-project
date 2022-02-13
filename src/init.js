@@ -1,4 +1,4 @@
-import "dotenv/config";
+import "dotenv/config"
 import "./db";
 import "./models/Board";
 import "./models/User";
