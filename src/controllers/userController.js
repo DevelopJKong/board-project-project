@@ -1,7 +1,6 @@
 import User from "../models/User";
 import bcrypt from "bcrypt";
-//naveSocial
-let api_url = "";
+
 
 export const getJoin = (req, res) => {
   return res.render("join");
@@ -68,7 +67,8 @@ export const postLogin = async (req, res) => {
 };
 
 export const logout = (req, res) => {
-  return res.send("Log out ☕");
+  req.session.destroy();
+  return res.redirect("/")
 };
 
 export const see = (req, res) => {
@@ -82,6 +82,29 @@ export const edit = (req, res) => {
 export const remove = (req, res) => {
   return res.send("Delete Users ☕");
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*********************************네이버 소셜 로그인 시작************************************ */
+/*
+기본 아이디어 :
+먼저 네이버의 api 를 가지고 와서 로그인을 할수있도록 해줍니다 그런다음 콜백으로 넘겨서
+네이버 아이디,이름,이메일 등의 정보를 가지고 와야 합니다 그럴때 access_token 이 필요한데
+이렇게 전달되는 과정에 있어서 post로 왜 전달이 되지 않는지 현재 이곳에서 막혀있습니다
+*/
+
+//naveSocial
+let api_url = "";
 
 export const naverLogin = (req, res) => {
   const config = {
@@ -136,13 +159,16 @@ export const postNaverCallback = (req, res) => {
     headers: {
       "X-Naver-Client-Id": client_id,
       "X-Naver-Client-Secret": client_secret,
+      'Content-Type': 'application/json'
     },
   };
+  console.log(api_url);
 
   request.get(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      res.writeHead(200, { "Content-Type": "text/json;charset=utf-8" });
-      res.end(body);
+      console.log(response.statusCode);
+      console.log(body);
+      return res.end(body);
     } else {
       res.status(response.statusCode).end();
       console.log("error = " + response.statusCode);
@@ -177,3 +203,4 @@ export const postNaverMember = (req, res) => {
     }
   });
 };
+/*********************************네이버 소셜 로그인 끝************************************ */
