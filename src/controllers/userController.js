@@ -1,6 +1,6 @@
 import User from "../models/User";
 import bcrypt from "bcrypt";
-
+import fetch from "node-fetch";
 
 export const getJoin = (req, res) => {
   return res.render("join");
@@ -68,7 +68,7 @@ export const postLogin = async (req, res) => {
 
 export const logout = (req, res) => {
   req.session.destroy();
-  return res.redirect("/")
+  return res.redirect("/");
 };
 
 export const see = (req, res) => {
@@ -83,18 +83,6 @@ export const remove = (req, res) => {
   return res.send("Delete Users ☕");
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
 /*********************************네이버 소셜 로그인 시작************************************ */
 /*
 기본 아이디어 :
@@ -103,8 +91,7 @@ export const remove = (req, res) => {
 이렇게 전달되는 과정에 있어서 post로 왜 전달이 되지 않는지 현재 이곳에서 막혀있습니다
 */
 
-//naveSocial
-let api_url = "";
+
 
 export const naverLogin = (req, res) => {
   const config = {
@@ -116,7 +103,7 @@ export const naverLogin = (req, res) => {
 
   const { client_id, client_secret, state, redirectURI } = config;
 
-  api_url =
+  const api_url =
     "https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=" +
     client_id +
     "&redirect_uri=" +
@@ -124,83 +111,65 @@ export const naverLogin = (req, res) => {
     "&state=" +
     state;
   //res.writeHead(200, { "Content-Type": "text/html;charset=utf-8" });
-  res.redirect(api_url);
+  return res.redirect(api_url);
 };
 
-export const getNaverCallback = (req, res) => {
-  return res.redirect("/users/member");
-};
-
-export const postNaverCallback = (req, res) => {
+export const naverCallback = async (req, res) => {
+  const baseUrl = "https://nid.naver.com/oauth2.0/token";
+  const grantType = "grant_type=authorization_code";
   const config = {
     client_id: process.env.NAVER_CLIENT_ID,
     client_secret: process.env.NAVER_CLIENT_SECRET,
-    state: process.env.RANDOM_STATE,
     redirectURI: process.env.MY_CALLBACK_URL,
+    state: req.query.state,
+    code: req.query.code,
   };
+  const params = new URLSearchParams(config).toString();
+  const finalUrl = `${baseUrl}?${grantType}&${params}`;
+  const tokenRequest = await (
+    await fetch(finalUrl, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+      },
+    })
+  ).json();
+  if ("access_token" in tokenRequest) {
+    const { access_token } = tokenRequest;
+    const apiUrl = "https://openapi.naver.com/v1/nid/me";
+    const allData = await (
+      await fetch(`${apiUrl}`, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      })
+    ).json();
 
-  const { client_id, client_secret, state, redirectURI } = config;
-  const code = req.query.code;
-  state = req.query.state;
-  api_url =
-    "https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id=" +
-    client_id +
-    "&client_secret=" +
-    client_secret +
-    "&redirect_uri=" +
-    redirectURI +
-    "&code=" +
-    code +
-    "&state=" +
-    state;
-  let request = require("request");
-  let options = {
-    url: api_url,
-    headers: {
-      "X-Naver-Client-Id": client_id,
-      "X-Naver-Client-Secret": client_secret,
-      'Content-Type': 'application/json'
-    },
-  };
-  console.log(api_url);
-
-  request.get(options, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      console.log(response.statusCode);
-      console.log(body);
-      return res.end(body);
-    } else {
-      res.status(response.statusCode).end();
-      console.log("error = " + response.statusCode);
+    if (!allData.response.email) {
+      return res.redirect("/login");
     }
-  });
+    const existingUser = await User.findOne({ email: allData.response.email });
+    if (existingUser) {
+      req.session.loggedIn = true;
+      req.session.user = existingUser;
+      return res.redirect("/");
+    } else {
+      const user = await User.create({
+        name: allData.response.name ? allData.response.name : "Unknown",
+        username: allData.response.nickname,
+        email: allData.response.email,
+        password: "",
+        socialOnly: true,
+        region: "korea",
+      });
+
+      req.session.loggedIn = true;
+      req.session.user = user;
+      return res.redirect("/");
+    }
+  } else {
+    return res.redirect("/login");
+  }
 };
 
-export const getNaverMember =(req,res) => {
-  return res.redirect("/");
-}
-
-export const postNaverMember = (req, res) => {
-  api_url = "https://openapi.naver.com/v1/nid/me";
-  let request = require("request");
-  let token = req.body.token;
-  let header = "Bearer " + token; // Bearer 다음에 공백 추가
-  let options = {
-    url: api_url,
-    headers: { Authorization: header },
-  };
-
-  request.get(options, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      res.writeHead(200, { "Content-Type": "text/json;charset=utf-8" });
-      res.end(body);
-    } else {
-      console.log("error");
-      if (response != null) {
-        res.status(response.statusCode).end();
-        console.log("error = " + response.statusCode);
-      }
-    }
-  });
-};
 /*********************************네이버 소셜 로그인 끝************************************ */
