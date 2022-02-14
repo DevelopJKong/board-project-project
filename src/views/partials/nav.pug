@@ -9,11 +9,11 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-light
                 a(aria-current="page" href="/").nav-link.active Home
                 if loggedIn
                     a(href="/users/logout").nav-link.active Logout
-                    a(href="/profile" style="color:var(--bs-primary);").nav-link.active #{loggedInUser.username} Profile ☕
+                    a(href="/users/edit" style="color:var(--bs-primary);").nav-link.active #{loggedInUser.name} Profile ☕
+                    a(href="/board/write").nav-link Write
                 else
                     a(href="/login").nav-link.active Login
-                a(href="/join").nav-link Join
-                a(href="/board/write").nav-link Write
+                    a(href="/join").nav-link Join
                 a(href="/search").nav-link Search
                 //- a(href="/search").nav-link Write
                 //- a(href="#").nav-link.disabled Disabled

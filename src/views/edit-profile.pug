@@ -5,14 +5,14 @@ block content
             if errorMessage
                 p(style="color: red;")=errorMessage
                 br
-            h3.title-name ☕Join
+            h3.title-name ☕Edit Profile
             form(method="POST").row.g-3
                 div.col-md-6
                     label(for="inputUser").form-label User name
-                    input(type="text" placeholder="User name" name="username" required).form-control#inputUser
+                    input(type="text" placeholder="User name" name="username" value=loggedInUser.username required).form-control#inputUser
                 div.col-md-6
                     label(for="inputNickname").form-label Nickname
-                    input(type="text" placeholder="Nickname" name="name" required).form-control#inputNickname
+                    input(type="text" placeholder="Nickname" name="name" value=loggedInUser.name required).form-control#inputNickname
                 div.col-12
                     label(for="inputPassword").form-label Password
                     input(type="password" placeholder="Password" name="password" required).form-control#inputAddress
@@ -21,14 +21,9 @@ block content
                     input(type="password" placeholder="Confirmation Password" name="password2" required).form-control#inputAddress2
                 div.col-12
                     label(for="inputEmail").form-label Email
-                    input(type="email" placeholder="Email" name="email" required).form-control#inputEmail
+                    input(type="email" placeholder="Email" name="email" value=loggedInUser.email required).form-control#inputEmail
                 div.col-12
                     label(for="inputRegion").form-label Region
-                    input(type="text" placeholder="Region" name="region" required).form-control#inputRegion
+                    input(type="text" placeholder="Region" name="region" value=loggedInUser.region required).form-control#inputRegion
                 div.col-12
                     button(type="submit").btn.btn-primary Sign in
-                hr
-                div.col-12
-                    p 계정이 이미 있으신가요? 💬
-                    br
-                    a(href="/login").btn.btn-secondary Login &rarr;

@@ -66,17 +66,25 @@ export const postLogin = async (req, res) => {
   return res.redirect("/");
 };
 
-export const logout = (req, res) => {
-  req.session.destroy();
-  return res.redirect("/");
-};
 
 export const see = (req, res) => {
   return res.send("See Users ☕");
 };
 
-export const edit = (req, res) => {
-  return res.send("Edit Users ☕");
+export const getEdit = (req, res) => {
+  return res.render("edit-profile");
+};
+
+export const postEdit = (req,res) => {
+  return res.redirect("/");
+}
+
+
+
+
+export const logout = (req, res) => {
+  req.session.destroy();
+  return res.redirect("/");
 };
 
 export const remove = (req, res) => {
