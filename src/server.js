@@ -28,6 +28,7 @@ app.use(
 
 app.use(localsMiddleware);
 app.use("/image", express.static(__dirname + "/image"));
+app.use("/uploads",express.static("uploads"));
 app.use("/static", express.static(__dirname + "/assets"));
 app.use("/", globalRouter);
 app.use("/users", userRouter);

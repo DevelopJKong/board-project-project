@@ -7,17 +7,17 @@ export const home = async (req, res) => {
   return res.render("home", { boards });
 };
 
-export const search = async(req, res) => {
+export const search = async (req, res) => {
   const { keyword } = req.query;
   let boards = [];
-  if(keyword) {
+  if (keyword) {
     boards = await Board.find({
       title: {
-        $regex: new RegExp(keyword,"i")
+        $regex: new RegExp(keyword, "i"),
       },
     });
   }
-  return res.render("search",{boards});
+  return res.render("search", { boards });
 };
 
 export const getSeeBoard = async (req, res) => {
@@ -38,13 +38,21 @@ export const getEditBoard = async (req, res) => {
   return res.render("edit", { board, pageTitle: "Edit" });
 };
 export const postEditBoard = async (req, res) => {
-  const { id } = req.params;
-  const { title, imgUrl, content } = req.body;
+  const {
+    params: { id },
+    body: { title, content,boardImg },
+    file,
+  } = req;
+
   const board = await Board.findById(id);
   if (!board) {
     return res.render("404", { pageTitle: "Page Not Found" });
   }
-  await Board.findByIdAndUpdate(id, { title, imgUrl, content });
+  await Board.findByIdAndUpdate(id, {
+    title,
+    content,
+    boardImg: file ? file.path : boardImg,
+  });
   return res.redirect(`/board/${id}`);
 };
 
@@ -53,13 +61,15 @@ export const getWriteBoard = (req, res) => {
 };
 
 export const postWriteBoard = async (req, res) => {
-  const { title, imgUrl, content } = req.body;
-
+  const {
+    body: { title, content,baordImg },
+    file,
+  } = req;
   try {
     await Board.create({
       title,
-      imgUrl,
       content,
+      boardImg: file ? file.path : baordImg,
     });
     return res.redirect("/");
   } catch (error) {

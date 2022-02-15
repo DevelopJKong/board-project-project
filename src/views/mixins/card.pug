@@ -1,6 +1,6 @@
 mixin boardMixins(board)
     div(style="width: 18rem;").card
-        img(src=`${board.imgUrl}` alt="logo" height="200").card-img-top
+        img(src=`${board.boardImg ? "/" + board.boardImg : "/image/cafe_logo.png"}` alt="board" height="200").card-img-top
         div.card-body
             h5.card-title=board.title
             p.card-text=board.content

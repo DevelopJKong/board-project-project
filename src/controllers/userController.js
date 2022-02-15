@@ -1,6 +1,6 @@
 import User from "../models/User";
 import bcrypt from "bcrypt";
-import fetch from "node-fetch";
+import fetch, { isRedirect } from "node-fetch";
 
 export const getJoin = (req, res) => {
   return res.render("join");
@@ -66,21 +66,86 @@ export const postLogin = async (req, res) => {
   return res.redirect("/");
 };
 
-
-export const see = (req, res) => {
-  return res.send("See Users ☕");
-};
-
 export const getEdit = (req, res) => {
   return res.render("edit-profile");
 };
 
-export const postEdit = (req,res) => {
+export const postEdit = async (req, res) => {
+  const {
+    session: {
+      user: { _id, avatar, email: sessionEmail, username: sessionUsername },
+    },
+    body: { name, email, username, region },
+    file,
+  } = req;
+  let searchParam = [];
+  if (sessionEmail !== email) {
+    searchParam.push({ email });
+  }
+  if (sessionUsername !== username) {
+    searchParam.push({ username });
+  }
+  if (searchParam.length > 0) {
+    const foundUser = await User.findOne({ $or: searchParam });
+    if (foundUser && foundUser._id.toString() !== _id) {
+      return res.status(400).render("edit-profile", {
+        errorMessage: "이미 있는 아아디나 이메일 입니다 ❌",
+      });
+    }
+  }
+
+  const updateUser = await User.findByIdAndUpdate(
+    _id,
+    {
+      avatar: file ? file.path : avatar,
+      name,
+      email,
+      username,
+      region,
+    },
+
+    { new: true }
+  );
+
+  req.session.user = updateUser;
+
   return res.redirect("/");
-}
+};
 
+export const getChangePassword = (req, res) => {
+  if (req.session.user.socialOnly === true) {
+    console.log("hi");
+    return res.redirect("/");
+  }
+  return res.render("change-password");
+};
 
+export const postChangePassword = async (req, res) => {
+  const {
+    session: {
+      user: { _id },
+    },
+    body: { oldPassword, newPassword, newPasswordConfirmation },
+  } = req;
+  const user = await User.findById(_id);
+  const validationChecker = await bcrypt.compare(oldPassword, user.password);
 
+  if (!validationChecker) {
+    return res.render("change-password", {
+      errorMessage: "비밀번호가 맞지 않습니다 ❌",
+    });
+  }
+
+  if (newPassword !== newPasswordConfirmation) {
+    return res.status(400).redirect("change-password", {
+      errorMessage: "비밀번호가 다릅니다 ❌",
+    });
+  }
+
+  user.password = newPassword;
+  await user.save();
+  return res.redirect("users/logout");
+};
 
 export const logout = (req, res) => {
   req.session.destroy();
@@ -91,6 +156,16 @@ export const remove = (req, res) => {
   return res.send("Delete Users ☕");
 };
 
+export const see = async (req, res) => {
+  const { id } = req.params;
+  const user = await User.findById(id);
+
+  if(!user) {
+    return res.status(404).render("404");
+  }
+  return res.render("profile", { user });
+};
+
 /*********************************네이버 소셜 로그인 시작************************************ */
 /*
 기본 아이디어 :
@@ -98,8 +173,6 @@ export const remove = (req, res) => {
 네이버 아이디,이름,이메일 등의 정보를 가지고 와야 합니다 그럴때 access_token 이 필요한데
 이렇게 전달되는 과정에 있어서 post로 왜 전달이 되지 않는지 현재 이곳에서 막혀있습니다
 */
-
-
 
 export const naverLogin = (req, res) => {
   const config = {

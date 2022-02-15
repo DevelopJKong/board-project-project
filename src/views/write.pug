@@ -3,15 +3,18 @@ block content
     div.board-form-wrapper
         if errorMessage
             span=errorMessage
-        form(method="POST").board-form
+        form(method="POST" enctype="multipart/form-data").board-form
             h3.title-name=pageTitle
+            img(src=`${loggedInUser.boardImg ? "/" + loggedInUser.boardImg : "/image/cafe_logo.png"}` width="100" height="100")
+            br
+            hr
             div.col-12
                 label(for="inputTitle").form-label 📝Board Title
                 input(type="text" placeholder="Title" name="title" required maxLength=30).form-control#inputTitle
             br
             div.col-12
-                label(for="inputText").form-label 🎄Image URL
-                input(type="text" placeholder="Text" name="imgUrl" required).form-control#inputText
+                label(for="inputBoardImg").form-label 🎨 Board Img
+                input(type="file" placeholder="Board Img" name="boardImg" accept="*/image").form-control#inputBoardImg
             br
             p.board-title--text ⛳ Textarea
             div.input-group 
