@@ -1,6 +1,7 @@
 import User from "../models/User";
 import bcrypt from "bcrypt";
 import fetch, { isRedirect } from "node-fetch";
+import Board from "../models/Board";
 
 export const getJoin = (req, res) => {
   return res.render("join");
@@ -158,7 +159,7 @@ export const remove = (req, res) => {
 
 export const see = async (req, res) => {
   const { id } = req.params;
-  const user = await User.findById(id);
+  const user = await User.findById(id).populate("boards");
 
   if(!user) {
     return res.status(404).render("404");

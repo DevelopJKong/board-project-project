@@ -9,7 +9,11 @@ block content
             div.card-body
                 h5.card-title=board.title
                 p.card-text=board.content
+                a(href=`/users/${board.owner._id}` style="color:rgba(0,0,0,0.3);").card-text Upload by #{board.owner.name}
+                br
+                br
+          
                 a(href="/").btn.btn-primary.margin-right Home
-                if loggedIn
+                if String(board.owner._id) === String(loggedInUser._id)
                     a(href=`${board.id}/edit`).btn.btn-warning.margin-right Edit
                     a(href=`${board.id}/delete`).btn.btn-danger Delete
