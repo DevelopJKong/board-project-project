@@ -52,7 +52,7 @@ export const postEditBoard = async (req, res) => {
     body: { title, content, boardImg },
     file,
   } = req;
-
+  const isHeroku = process.env.MODE === "production";
   const board = await Board.findById(id);
   if (!board) {
     return res.status(404).render("404", { pageTitle: "Page Not Found" });
@@ -63,7 +63,7 @@ export const postEditBoard = async (req, res) => {
   await Board.findByIdAndUpdate(id, {
     title,
     content,
-    boardImg: file ? file.path : boardImg,
+    boardImg: file ? (isHeroku ? file.location : file.path): boardImg,
   });
   return res.redirect(`/board/${id}`);
 };
