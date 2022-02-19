@@ -3,7 +3,7 @@ include mixins/card
 block content
     div.board-form-wrapper  
         h3.title-name #{user.name} Profile
-        img(src=`${user.avatar ? "/" + user.avatar : "/image/cafe_logo.png"}` width="100" height="100")
+        img(src=`${user.avatar ? (isHeroku ? user.avatar : "/" + user.avatar) : "/image/cafe_logo.png"}` width="100" height="100")
     div.content-box
         each board in user.boards.reverse() 
             +boardMixins(board)

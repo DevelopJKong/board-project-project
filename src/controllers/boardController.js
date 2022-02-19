@@ -1,9 +1,7 @@
-import { render } from "pug";
 import Board from "../models/Board";
 import User from "../models/User";
 
 export const home = async (req, res) => {
-  const { id } = req.params;
   const boards = await Board.find({}).sort({ createdAt: "desc" }); // find vs findById
   return res.render("home", { boards });
 };
@@ -79,15 +77,16 @@ export const postWriteBoard = async (req, res) => {
     user: { _id },
   } = req.session;
   const {
-    body: { title, content, baordImg },
+    body: { title, content, boardImg },
     file,
   } = req;
+  const isHeroku = process.env.NODE_ENV === "production";
   try {
     const newBoard = await Board.create({
       title,
       content,
       owner: _id,
-      boardImg: file ? file.path : baordImg,
+      boardImg: file ? (isHeroku ? file.location : file.path) : boardImg,
     });
     const user = await User.findById(_id);
     user.boards.push(newBoard._id);

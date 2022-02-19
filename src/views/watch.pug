@@ -5,7 +5,7 @@ block content
             h2 #{pageTitle} ☕
             br
             hr
-            img(src="/" + board.boardImg alt="logo" height="300").card-img-top
+            img(src=(isHeroku ? board.boardImg :"/" + board.boardImg) alt="logo" height="300").card-img-top
             div.card-body
                 h5.card-title=board.title
                 p.card-text=board.content

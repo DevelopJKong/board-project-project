@@ -6,7 +6,7 @@ block content
                 p(style="color: red;")=errorMessage
                 br
             h3.title-name ☕Edit Profile
-            img(src=`${loggedInUser.avatar ? "/" + loggedInUser.avatar : "/image/cafe_logo.png"}` width="100" height="100")
+            img(src=`${loggedInUser.avatar ? (isHeroku ? loggedInUser.avatar : "/" + loggedInUser.avatar ): "/image/cafe_logo.png"}` width="100" height="100")
             form(method="POST" enctype="multipart/form-data").row.g-3
                 div.col-12
                     label(for="inputPic").form-label Profile Picture
