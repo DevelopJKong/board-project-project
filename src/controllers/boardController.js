@@ -80,7 +80,8 @@ export const postWriteBoard = async (req, res) => {
     body: { title, content, boardImg },
     file,
   } = req;
-  const isHeroku = process.env.NODE_ENV === "production";
+  const isHeroku = process.env.MODE === "production";
+
   try {
     const newBoard = await Board.create({
       title,
