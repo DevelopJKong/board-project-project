@@ -80,13 +80,13 @@ export const postWriteBoard = async (req, res) => {
     body: { title, content, boardImg },
     file,
   } = req;
-  const isHeroku = process.env.MODE === "production";
+  const isHeroku = process.env.NODE_ENV === "production";
   try {
     const newBoard = await Board.create({
       title,
       content,
       owner: _id,
-      boardImg: isHeroku ? file.location : file.path,
+      boardImg: file ? (isHeroku ? file.location : file.path) : boardImg,
     });
     const user = await User.findById(_id);
     user.boards.push(newBoard._id);
