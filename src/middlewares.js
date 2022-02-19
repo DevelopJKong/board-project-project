@@ -9,7 +9,7 @@ const s3 = new aws.S3({
     }
 });
 
-const isHeroku = process.env.NODE_ENV === "production";
+const isHeroku = process.env.MODE === "production";
 
 const avatarUploader = multerS3({
     s3:s3,

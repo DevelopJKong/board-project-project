@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "let's make simple board project using node.js & mongo",
   "scripts": {
-    "start": "node build/init.js --mode=production",
+    "start": "node build/init.js",
     "build": "npm run build:server",
     "build:server": "babel src -d build",
-    "dev": "nodemon --mode=development"
+    "dev": "nodemon"
   },
   "repository": {
     "type": "git",
