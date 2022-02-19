@@ -86,7 +86,7 @@ export const postWriteBoard = async (req, res) => {
       title,
       content,
       owner: _id,
-      boardImg: file ? (isHeroku ? file.location : file.path) : boardImg,
+      boardImg: isHeroku ? file.location : file.path,
     });
     const user = await User.findById(_id);
     user.boards.push(newBoard._id);
