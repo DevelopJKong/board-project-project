@@ -2,7 +2,8 @@ extends base
 
 block content 
     div
-        button(onclick="requestPay()").btn.btn-primary 결제하기
+        form(method="POST" action="/board/sucess")
+            input(onclick="requestPay()" value="결제하기").btn.btn-primary
     script.
         const IMP = window.IMP;
         function requestPay() {
@@ -25,12 +26,12 @@ block content
                 if (rsp.success) { // 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우
                     // jQuery로 HTTP 요청
                     jQuery.ajax({
-                    url: "https://www.myservice.com/payments/complete", // 가맹점 서버
+                    url: "http://localhost:5050/board/success", // 가맹점 서버
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     data: {
                         imp_uid: rsp.imp_uid,
-                        merchant_uid: rsp.merchant_uid
+                        merchant_uid: rsp.merchant_uid,
                         //기타 필요한 데이터가 있으면 추가 전달
                     }
                 }).done(function(data) { // 응답 처리
@@ -41,12 +42,14 @@ block content
                         break;
                         case "success":
                         // 결제 성공 시 로직
-                        window.location.href = "/board/sucess";
+                        console.log("success2");
                         break;
                     }
                     });
                 } else {
-                alert("결제에 실패하였습니다. 에러 내용: " +  rsp.error_msg);
+                    console.log(rsp.imp_uid);
+                    console.log(rsp.merchant_uid);
+                alert("결제에 실패하였습니다. 에러 내용: " +  rsp.error_msg );
                 }
             }); 
         }

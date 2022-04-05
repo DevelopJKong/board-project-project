@@ -1,6 +1,7 @@
 import Board from "../models/Board";
 import Order from "../models/Order";
 import User from "../models/User";
+import fetch from "node-fetch";
 
 export const home = async (req, res) => {
   const boards = await Board.find({}).sort({ createdAt: "desc" }); // find vs findById
@@ -122,19 +123,17 @@ export const getDeleteBoard = async (req, res) => {
 
 /*************************************** 결제 기능 구현중 */
 
-export const getShopList = (req,res) => {
+export const getShopList = (req, res) => {
   return res.render("shop-list");
-}
+};
 
-export const postShopList = (req,res) => {
+export const postShopList = (req, res) => {
   return res.redirect("/board/shop");
-}
+};
 
-
-
-export const getShopSuccess = (req,res) => {
+export const getShopSuccess = (req, res) => {
   return res.render("shop-success");
-}
+};
 
 export const getShop = (req, res) => {
   console.log(req.session.user);
@@ -145,40 +144,45 @@ export const getShop = (req, res) => {
 
 export const postShop = async (req, res) => {
   try {
-    //1. 굳이 body에서 받아와야하나? **************
+    //1. 굳이 body에서 받아와야하나? ************** => body-parser가 필요했음
     //2. 데이터 베이스 payments 스키마에 있음 ****************
     const { imp_uid, merchant_uid } = req.body; // req의 body에서 imp_uid, merchant_uid 추출
-
     // 액세스 토큰(access token) 발급 받기
     const getToken = await (
-      await fetch({
-        url: "https://api.iamport.kr/users/getToken",
-        method: "post", // POST method
-        headers: { "Content-Type": "application/json" }, // "Content-Type": "application/json"
-        data: {
+      await fetch("https://api.iamport.kr/users/getToken", {
+        method: "POST", // POST method
+        headers: { "Content-Type" : "application/json" }, // "Content-Type": "application/json"
+        body: JSON.stringify({
           imp_key: process.env.SHOP_API_KEY, // REST API키
           imp_secret: process.env.SHOP_API_SECRET, // REST API Secret
-        },
+        }),
       })
     ).json();
+    console.log(getToken);
 
-    const { access_token } = getToken.data.response; // 인증 토큰
+    const { access_token } = getToken.response; // 인증 토큰
+    console.log(access_token);
     // imp_uid로 아임포트 서버에서 결제 정보 조회
     const getPaymentData = await (
-      await fetch({
-        url: `https://api.iamport.kr/payments/${imp_uid}`, // imp_uid 전달
-        method: "get", // GET method
+      await fetch(`https://api.iamport.kr/payments/${imp_uid}`,{ // imp_uid 전달
+        method: "GET", // GET method
         headers: { Authorization: access_token }, // 인증 토큰 Authorization header에 추가
       })
     ).json();
+    console.log(getPaymentData);
+    console.log("********************************************************************");
 
-    const paymentData = getPaymentData.data.response; // 조회한 결제 정보
+    const paymentData = getPaymentData.response; // 조회한 결제 정보
+    console.log(paymentData);
+    console.log("********************************************************************");
     // DB에서 결제되어야 하는 금액 조회
-    const order = await Order.findById(paymentData.merchant_uid);
-    const amountToBePaid = order.amount; // 결제 되어야 하는 금액
+    //const order = await Order.findById(paymentData.merchant_uid);
+    //const amountToBePaid = order.amount; // 결제 되어야 하는 금액
 
     // 결제 검증하기
     const { amount, status } = paymentData;
+    console.log(amount,status);
+    console.log("********************************************************************");
     if (amount === amountToBePaid) {
       // 결제 금액 일치. 결제 된 금액 === 결제 되어야 하는 금액
       await Order.findByIdAndUpdate(merchant_uid, { $set: paymentData }); // DB에 결제 정보 저장

@@ -37,6 +37,7 @@ boardRouter
 boardRouter
   .route("/success")
   .get(getShopSuccess)
+  .post(postShop)
 
 boardRouter
   .route("/shop")
@@ -46,6 +47,5 @@ boardRouter
 boardRouter
   .route("/shop/:id(\\d+)")
   .get(getShop)
-  .post(postShop)
 
 export default boardRouter;
