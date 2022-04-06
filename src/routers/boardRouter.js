@@ -11,8 +11,9 @@ import {
   postShop,
   getShopList,
   postShopList,
+  getShopItem,
 } from "../controllers/boardController";
-import { boardImgFiles, protectorMiddleware } from "../middlewares";
+import { boardImgFiles, itemFiles, protectorMiddleware } from "../middlewares";
 const boardRouter = express.Router();
 
 boardRouter.route("/:id([0-9a-f]{24})").get(getSeeBoard);
@@ -42,10 +43,14 @@ boardRouter
 boardRouter
   .route("/shop")
   .get(getShopList)
-  .post(postShopList)
+  .post(itemFiles.single("itemImg"),postShopList)
 
 boardRouter
-  .route("/shop/:id(\\d+)")
+  .route("/shop/list")
+  .get(getShopItem)
+
+boardRouter
+  .route("/shop/list/:id([0-9a-f]{24})")
   .get(getShop)
 
 export default boardRouter;

@@ -4,6 +4,7 @@ import "./db";
 import "./models/Board";
 import "./models/User";
 import "./models/Order";
+import "./models/Item";
 import app from "./server";
 
 const PORT = process.env.PORT || 5050;

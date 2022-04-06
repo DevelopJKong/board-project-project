@@ -1,9 +1,16 @@
 extends base
 
-block content 
-    div
-        form(method="POST" action="/board/sucess")
-            input(onclick="requestPay()" value="결제하기").btn.btn-primary
+block content
+    div(style="width: 32rem;").card-detail
+        img(src="/" + item.itemImg alt="logo" height="300").card-img-top
+        div.card-body
+            h5.card-title=item.name
+            p.card-text=item.content
+            strong.card-text #{item.amount}
+            br
+            br
+            form(method="POST" action="/board/sucess")
+                input(onclick="requestPay()" value="결제하기").btn.btn-primary
     script.
         const IMP = window.IMP;
         function requestPay() {
@@ -11,45 +18,49 @@ block content
             IMP.request_pay({
                 pg: "html5_inicis", // PG사 선택
                 pay_method: "card", // 지불 수단
-                merchant_uid: 'merchant_' + new Date().getTime(), //가맹점에서 구별할 수 있는 고유한id
-                name: "맥북 프로 16인치", // 상품명
-                amount: 100, // 가격
+                merchant_uid: `merchant_#{Date.now()}`, //가맹점에서 구별할 수 있는 고유한id
+                name: `#{item.name}`, // 상품명
+                amount: `#{item.amount}`, // 가격
                 buyer_email: `#{loggedInUser.email}`,
                 buyer_name: `#{loggedInUser.username}`, // 구매자 이름
                 buyer_tel: "", // 구매자 연락처 
                 buyer_addr: `#{loggedInUser.region}`,// 구매자 주소지
-                buyer_postcode: "01181", // 구매자 우편번호
-                m_redirect_url : 'https://example.com/mobile/complete', // 모바일 결제시 사용할 url
+                buyer_postcode: "", // 구매자 우편번호
+                m_redirect_url : '', // 모바일 결제시 사용할 url
                 digital: true, // 실제 물품인지 무형의 상품인지(핸드폰 결제에서 필수 파라미터)
                 app_scheme : '' // 돌아올 app scheme
-            }, function (rsp) { // callback
+            }, async function (rsp) { // callback
                 if (rsp.success) { // 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우
                     // jQuery로 HTTP 요청
-                    jQuery.ajax({
-                    url: "http://localhost:5050/board/success", // 가맹점 서버
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    data: {
-                        imp_uid: rsp.imp_uid,
-                        merchant_uid: rsp.merchant_uid,
-                        //기타 필요한 데이터가 있으면 추가 전달
+                    const data = await(
+                        await fetch("http://localhost:5050/board/success",
+                            {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body : JSON.stringify({
+                                    imp_uid: rsp.imp_uid,
+                                    merchant_uid: rsp.merchant_uid,
+                                    id:"#{item._id}"
+                                })
+                            }
+                    )).json();
+
+                    try {
+                        switch(data.status) {
+                            case "vbankIssued":
+                            // 가상계좌 발급 시 로직
+                            break;
+                            case "success":
+                                window.location.href = "/board/success";
+                            // 결제 성공 시 로직
+                            break;
+                        }
+                    }  catch (error) {
+                        console.log(error);
                     }
-                }).done(function(data) { // 응답 처리
-                    switch(data.status) {
-                        case "vbankIssued":
-                        // 가상계좌 발급 시 로직
-                        console.log("success1");
-                        break;
-                        case "success":
-                        // 결제 성공 시 로직
-                        console.log("success2");
-                        break;
-                    }
-                    });
+                    
                 } else {
-                    console.log(rsp.imp_uid);
-                    console.log(rsp.merchant_uid);
-                alert("결제에 실패하였습니다. 에러 내용: " +  rsp.error_msg );
+                    alert("결제에 실패하였습니다. 에러 내용: " +  rsp.error_msg );
                 }
             }); 
         }

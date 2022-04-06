@@ -7,7 +7,7 @@ const itemSchema = new mongoose.Schema({
   amount: { type: Number, require: true },
   itemImg: { type: String, default: "image/cafe_logo.png" },
   content: { type: String, required: true, trim: true, maxlength: 300 },
-  createAt : { type: Date, required: true, default: Date.now },
+  createdAt : { type: Date, required: true, default: Date.now },
   meta: {
     views: { type: Number, default: 0, required: true },
     rating: { type: Number, default: 0, required: true },

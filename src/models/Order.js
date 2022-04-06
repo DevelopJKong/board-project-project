@@ -2,15 +2,12 @@ import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema(
   {
-    name: { type: String, require: true },
-    amount: { type: Number, require: true },
-    merchantUid: {
-      type: mongoose.Schema.Types.ObjectId,
-      require: true,
-      ref: "Payment",
-    },
+    merchantUid: { type: String, require: true, default:'merchant_' + Date.now() },
+    amount: { type: Number, require: true, default: 0 },
+    cancelAmount: { type: Number, require: true, default: 0 },
+    payMethod: { type: String, require: true, default: "card" },
+    status: { type: String, default: "unpaid" }
   },
-  { timestamps: true }
 );
 
 const Order = mongoose.model("Order", orderSchema);

@@ -62,3 +62,10 @@ export const boardImgFiles = multer({
     storage:isHeroku ? boardImgUploader:undefined
 })
 
+export const itemFiles = multer({
+    dest:"uploads/item",
+    limits: {
+        fileSize:10000000
+    }
+});
+
