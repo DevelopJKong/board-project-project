@@ -1,5 +1,6 @@
 @import url("./reset.css");
-
+@import url("./components/color.css");
+@import url("./components/font.css");
 /* home */
 .footer {
   width: 100%;

@@ -7,6 +7,7 @@ import boardRouter from "./routers/boardRouter";
 import morgan from "morgan";
 import { localsMiddleware } from "./middlewares";
 import bodyParser from "body-parser";
+import shopRouter from "./routers/shopRouter";
 
 const app = express();
 const logger = morgan("dev");
@@ -35,5 +36,6 @@ app.use("/static",express.static("assets"));
 app.use("/", globalRouter);
 app.use("/users", userRouter);
 app.use("/board", boardRouter);
+app.use("/shop", shopRouter);
 
 export default app;

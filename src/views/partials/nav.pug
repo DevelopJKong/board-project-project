@@ -13,6 +13,7 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-light
                     a(href=`/users/${loggedInUser._id}`).nav-link My Profile
                     a(href="/board/write").nav-link Write
                 else
+                    a(href="/shop/list").nav-link.green--color Shop
                     a(href="/login").nav-link.active Login
                     a(href="/join").nav-link Join
                 a(href="/search").nav-link Search
