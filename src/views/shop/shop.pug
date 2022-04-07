@@ -6,14 +6,27 @@ block content
         div.card-body
             h5.card-title=item.name
             p.card-text=item.content
-            strong.card-text #{item.amount}
+            strong.card-text #{item.amount}원
             br
             br
             form(method="POST" action="/board/sucess")
+                br
+                span 무단 배포를 하지 않겠습니다
+                input(id="check" type="checkbox" name="check" value="true" checked)
+                br
+                br
+                a(href="/shop/list") &larr;뒤로가기
+                |&nbsp;&nbsp;&nbsp;
                 input(onclick="requestPay()" value="결제하기").btn.btn-primary
     script.
-        const IMP = window.IMP;
+        const check = document.getElementById("check");
+        console.log(check.checked);
         function requestPay() {
+        if(!check.checked) {
+            alert("무단 배포에 대한 동의를 확인해주세요");
+            return;
+        }
+            const IMP = window.IMP;
             IMP.init("imp37791512");
             IMP.request_pay({
                 pg: "html5_inicis", // PG사 선택
