@@ -1,5 +1,8 @@
 import express from "express";
 import session from "express-session";
+import swaggerUi from "swagger-ui-express";
+import yaml from "yamljs";
+import path from "path";
 import MongoStore from "connect-mongo";
 import globalRouter from "./routers/globalRouter";
 import userRouter from "./routers/userRouter";
@@ -8,6 +11,8 @@ import morgan from "morgan";
 import { localsMiddleware } from "./middlewares";
 import bodyParser from "body-parser";
 import shopRouter from "./routers/shopRouter";
+
+
 
 const app = express();
 const logger = morgan("dev");
@@ -24,19 +29,22 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge:3600000
+      maxAge: 3600000,
     },
     store: MongoStore.create({
       mongoUrl: process.env.DB_URL,
     }),
   })
 );
+//path.join vs path.resolve
+const openAPIDocument = yaml.load(path.join(__dirname,'/swagger/swagger.yaml'));
 
 app.use(localsMiddleware);
-app.use("/image",express.static("image"));
+app.use("/image", express.static("image"));
 app.use("/uploads", express.static("uploads"));
-app.use("/static",express.static("assets"));
+app.use("/static", express.static("assets"));
 app.use("/", globalRouter);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openAPIDocument));
 app.use("/users", userRouter);
 app.use("/board", boardRouter);
 app.use("/shop", shopRouter);
