@@ -1,7 +1,45 @@
 import User from "../models/User";
 import bcrypt from "bcrypt";
-import fetch, { isRedirect } from "node-fetch";
-import Board from "../models/Board";
+import fetch from "node-fetch";
+import nodemailer from "nodemailer";
+import { v4 as uuidv4 } from "uuid";
+import Verification from "../models/Verification";
+const config = {
+  service: "gmail",
+  host: "smtp.gmail.com",
+  port: "587",
+  secure: false,
+  auth: {
+    user: process.env.GOOGLE_MAIL,
+    pass: process.env.GOOGLE_PASSWORD,
+  },
+};
+
+const sendMailer = async (data) => {
+  const transporter = nodemailer.createTransport(config);
+  transporter.sendMail(data, (err, info) => {
+    if (err) {
+      console.log(err);
+    } else {
+      return info.response;
+    }
+  });
+};
+
+export const postCheck = async (req, res) => {
+  const { username, checkEmail } = req.body;
+  const user = await User.findOne({ username });
+  const verification = await Verification.findOne({ user });
+  if (checkEmail === verification.code) {
+    user.verified = true;
+    await user.save();
+  }
+  return res.redirect("/login");
+};
+
+export const getCheck = (req, res) => {
+  return res.render("check");
+};
 
 export const getJoin = (req, res) => {
   return res.render("join");
@@ -25,9 +63,15 @@ export const postJoin = async (req, res) => {
       errorMessage: "이미 사용중인 이름/이메일 입니다 ❌",
     });
   }
-
+  const codeNum = uuidv4();
+  const mailVar = {
+    form: `${process.env.GOOGLE_MAIL}`,
+    to: email,
+    subject: "test email",
+    text: `please type ${codeNum}`,
+  };
   try {
-    await User.create({
+    const user = await User.create({
       name,
       username,
       email,
@@ -35,7 +79,13 @@ export const postJoin = async (req, res) => {
       region,
     });
 
-    return res.redirect("/login");
+    await Verification.create({
+      code: codeNum,
+      user,
+    });
+
+    await sendMailer(mailVar);
+    return res.render("check", { user });
   } catch (error) {
     return res.status(400).render("join", {
       errorMessage: error._message,
@@ -62,6 +112,12 @@ export const postLogin = async (req, res) => {
       errorMessage: "아이디 / 비밀번호 가 틀렸습니다 ❌",
     });
   }
+
+  if (!user.verified) {
+    console.log(user.verified);
+    return res.render("check", { user });
+  }
+
   req.session.loggedIn = true;
   req.session.user = user;
   return res.redirect("/");
@@ -161,7 +217,7 @@ export const see = async (req, res) => {
   const { id } = req.params;
   const user = await User.findById(id).populate("boards");
 
-  if(!user) {
+  if (!user) {
     return res.status(404).render("404");
   }
   return res.render("profile", { user });
