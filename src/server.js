@@ -44,6 +44,7 @@ app.use("/static", express.static("assets"));
 
 //router
 app.use("/", globalRouter);
+
 if (process.env.MODE === "development") {
   //path.join vs path.resolve
   const openAPIDocument = yaml.load(

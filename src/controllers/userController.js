@@ -67,8 +67,17 @@ export const postJoin = async (req, res) => {
   const mailVar = {
     form: `${process.env.GOOGLE_MAIL}`,
     to: email,
-    subject: "test email",
-    text: `please type ${codeNum}`,
+    subject: `${username} Cafe Small House 에 오신것을 환영합니다!`,
+    html: `
+    <strong>Cafe Small House</strong>
+    <br/>
+    <hr/>
+    <p style="font-size:25px">아래에 있는 확인 코드를 입력해주세요☕</p>
+    <p style="color:#0984e3; font-size: 25px;">${codeNum}</p>
+    <br/>
+    <p> 더 열심히 하는 cafe small house가 되겠습니다</p>
+    <p>&copy; ${new Date().getFullYear()} Cafe Small House</p>
+    `,
   };
   try {
     const user = await User.create({

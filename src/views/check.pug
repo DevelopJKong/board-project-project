@@ -11,15 +11,17 @@ block content
                 span#checkUsername #{user ? user.username : "유저"}
                 span.check-text-box 님 이메일을 인증해주세요
             br
-            p
-                b#time 0
-                b 초
+            if !user
+                p
+                    b#time 0
+                    b 초
 
             form(method="POST" action="/users/check").row.g-3
                 div.col-12#checkEmail
                     label(for="inputCheck").form-label Check Number
                     input(type="hidden" name="username" value=`${user ? user.username : "유저"}` )
                     input(type="text" placeholder="이메일 인증번호를 입력해주세요☕" name="checkEmail" ).form-control#inputCheck
+                    br
                     button(type="submit").btn.btn-warning Click &rarr;
 
         script(src="/static/js/check.js") 
