@@ -12,8 +12,6 @@ import { localsMiddleware } from "./middlewares";
 import bodyParser from "body-parser";
 import shopRouter from "./routers/shopRouter";
 
-
-
 const app = express();
 const logger = morgan("dev");
 
@@ -36,15 +34,23 @@ app.use(
     }),
   })
 );
-//path.join vs path.resolve
-const openAPIDocument = yaml.load(path.join(__dirname,'/swagger/swagger.yaml'));
 
 app.use(localsMiddleware);
+//staic 파일
 app.use("/image", express.static("image"));
 app.use("/uploads", express.static("uploads"));
 app.use("/static", express.static("assets"));
+
+
+//router
 app.use("/", globalRouter);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openAPIDocument));
+if (process.env.MODE === "development") {
+  //path.join vs path.resolve
+  const openAPIDocument = yaml.load(
+    path.join(__dirname, "/swagger/swagger.yaml")
+    );
+    app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openAPIDocument));
+}
 app.use("/users", userRouter);
 app.use("/board", boardRouter);
 app.use("/shop", shopRouter);
