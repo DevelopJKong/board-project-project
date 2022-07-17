@@ -5,7 +5,6 @@ import nodemailer from "nodemailer";
 import { v4 as uuidv4 } from "uuid";
 import Verification from "../models/Verification";
 
-
 const config = {
   service: "gmail",
   host: "smtp.gmail.com",
@@ -299,9 +298,23 @@ export const naverCallback = async (req, res) => {
     }
     const existingUser = await User.findOne({ email: allData.response.email });
     if (existingUser) {
-      req.session.loggedIn = true;
-      req.session.user = existingUser;
-      return res.redirect("/");
+      /**
+       *   이전 코드
+       *    - 이전에는 소셜로그인으로 가입하지 않고
+       *      그냥 가입하고 소셜로 로그인하면 일반 로그인이 되게끔 하였습니다
+       * */
+      
+      // req.session.loggedIn = true;
+      // req.session.user = existingUser;
+      // return res.redirect("/");
+
+      /**
+       *  수정 코드
+       *  - 에러를 발생하도록 구성하였습니다
+       */
+      return res.status(400).render("login", {
+        errorMessage: "존재하는 계정입니다 일반 로그인으로 로그인 해주세요 ❌",
+      });
     } else {
       const user = await User.create({
         name: allData.response.name ? allData.response.name : "Unknown",
