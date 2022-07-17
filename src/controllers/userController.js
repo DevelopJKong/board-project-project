@@ -4,6 +4,8 @@ import fetch from "node-fetch";
 import nodemailer from "nodemailer";
 import { v4 as uuidv4 } from "uuid";
 import Verification from "../models/Verification";
+
+
 const config = {
   service: "gmail",
   host: "smtp.gmail.com",
@@ -67,7 +69,7 @@ export const postJoin = async (req, res) => {
   const mailVar = {
     form: `${process.env.GOOGLE_MAIL}`,
     to: email,
-    subject: `${username} Cafe Small House 에 오신것을 환영합니다!`,
+    subject: `${username}님 Cafe Small House 에 오신것을 환영합니다!`,
     html: `
     <strong>Cafe Small House</strong>
     <br/>

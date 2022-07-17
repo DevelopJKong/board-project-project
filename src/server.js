@@ -41,7 +41,6 @@ app.use("/image", express.static("image"));
 app.use("/uploads", express.static("uploads"));
 app.use("/static", express.static("assets"));
 
-
 //router
 app.use("/", globalRouter);
 
