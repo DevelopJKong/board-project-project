@@ -26,6 +26,10 @@ block content
             alert("무단 배포에 대한 동의를 확인해주세요");
             return;
         }
+        if(#{!loggedIn}){
+            alert("로그인을 해주세요 감사합니다 :)");
+            return;
+        }
             const IMP = window.IMP;
             IMP.init("#{shopPidCode}");
             IMP.request_pay({
