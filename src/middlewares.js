@@ -27,6 +27,8 @@ export const localsMiddleware = (req,res,next) => {
     res.locals.loggedInUser = req.session.user || {};
     res.locals.isHeroku = isHeroku;
     res.locals.shopPidCode = process.env.SHOP_PID_CODE;
+    res.locals.devDomain = "http://localhost:5050/shop/success",
+    res.locals.domain = "https://aboutcafeboard.herokuapp.com/shop/success"
     next();
 }
 
