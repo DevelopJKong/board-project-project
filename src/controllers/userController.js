@@ -59,7 +59,7 @@ export const postCertification = async (req, res) => {
     const { name, birth, phone } = certificationsInfo;
 
     const user = await User.findOne({ phone });
-
+    console.log("존재하는 유저 확인 => user::",user);
     if (user) {
       return res.send({ status: "fail", message: "이미 존재하는 핸드폰 번호 입니다" });
     }
