@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   region: String,
   verified: { type: Boolean, default: false },
+  isAdmin: { type: Boolean, default: false },
   boards: [{ type: mongoose.Schema.Types.ObjectId, ref: "Board" }],
 });
 
