@@ -7,17 +7,17 @@ block content
                 br
             h3.title-name ☕Join
             div.col-12
-                form(method="POST" action="/users/certification")
+                form(method="POST" action="/users/certifications")
                     label(for="inputPhoneNum").form-label PhoneNumber
-                    input(type="text" placeholder="PhoneNumber").form-control#inputPhoneNum
+                    input(type="text" placeholder="PhoneNumber" required).form-control#inputPhoneNum
                     br
-                    button(type="submit").btn.btn-warning#Auth 인증하기 📌
+                    button(type="submit").btn.btn-warning#auth 인증하기 📌
                     br
                     br
-                p(style="color:green; display:none;")#AuthText 
-                p(style="color:red; display:none;")#AuthFailText 
+                p(style="color:green; display:none;")#authText 
+                p(style="color:red; display:none;")#authFailText 
                 br
-            form(method="POST").row.g-3
+            form(method="POST")#createForm.row.g-3
                 div.col-md-6
                     label(for="inputUser").form-label User name
                     input(type="text" placeholder="User name" name="username" required).form-control#inputUser
@@ -37,9 +37,9 @@ block content
                     label(for="inputRegion").form-label Region
                     input(type="text" placeholder="Region" name="region" required).form-control#inputRegion
                 div.col-12    
-                    input(type="hidden" name="phoneNum" required).form-control#AuthNum
+                    input(type="hidden" name="phoneNum" required).form-control#authNum
                 div.col-12
-                    button(type="submit").btn.btn-primary Sign in
+                    button(type="submit").btn.btn-primary#createUser Sign in
                     br
                     br
                 hr
@@ -48,11 +48,23 @@ block content
                     br
                     a(href="/login").btn.btn-secondary Login &rarr;
     script.
-        const button = document.getElementById("Auth");
-        const authNum = document.getElementById("AuthNum");
-        const authText = document.getElementById("AuthText");
-        const authFailText = document.getElementById("AuthFailText");
+        const button = document.getElementById("auth");
+        const authNum = document.getElementById("authNum");
+        const authText = document.getElementById("authText");
+        const authFailText = document.getElementById("authFailText");
         const phoneNum = document.getElementById("inputPhoneNum");
+
+        const subButton = document.getElementById("createUser");
+        const createForm = document.getElementById("createForm");
+        subButton.addEventListener("click",(event) => {
+            event.preventDefault();
+            if(!phoneNum.value) {
+               alert("핸드폰 번호를 입력해주세요");
+               return;
+            }
+            createForm.submit();
+        });
+
         button.addEventListener("click",(event) => {
             event.preventDefault();
            if(!phoneNum.value) {
@@ -62,6 +74,7 @@ block content
             authNum.value = phoneNum.value;
             requestAuthentication();
         })
+
         function requestAuthentication() {
             const IMP = window.IMP;
             IMP.init("#{shopPidCode}");
