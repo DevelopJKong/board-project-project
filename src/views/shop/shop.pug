@@ -50,7 +50,7 @@ block content
                 if (rsp.success) { // 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우
                     // jQuery로 HTTP 요청
                     const data = await(
-                        await fetch("#{isHeroku ? domain : devDomain}",
+                        await fetch("#{isHeroku ? domain : devDomain}/shop/success",
                             {
                                 method: "POST",
                                 headers: { "Content-Type": "application/json" },

@@ -1,10 +1,10 @@
 import express from "express";
-import { see , getEdit,postEdit, remove, logout, naverLogin, naverCallback, getChangePassword, postChangePassword, postCheck, getCheck,} from "../controllers/userController";
+import { see , getEdit,postEdit, remove, logout, naverLogin, naverCallback, getChangePassword, postChangePassword, postCheck, getCheck, postCertification,} from "../controllers/userController";
 import { protectorMiddleware, publicOnlyMiddleware, avatarFiles } from "../middlewares";
 
 const userRouter = express.Router();
 
-
+userRouter.route("/certifications").post(postCertification);
 userRouter.route("/edit").all(protectorMiddleware).get(getEdit).post(avatarFiles.single("avatar"),postEdit);
 userRouter.route("/check").get(getCheck).post(postCheck);
 userRouter.route("/logout").all(protectorMiddleware).get(logout);

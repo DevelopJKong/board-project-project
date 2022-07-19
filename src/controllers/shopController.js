@@ -52,7 +52,6 @@ export const getShop = async (req, res) => {
 
 export const postShop = async (req, res) => {
   try {
-    console.log("hello");
     //1. 굳이 body에서 받아와야하나? ************** => body-parser가 필요했음
     //2. 데이터 베이스 payments 스키마에 있음 ****************
     const { imp_uid, merchant_uid, id } = req.body; // req의 body에서 imp_uid, merchant_uid 추출

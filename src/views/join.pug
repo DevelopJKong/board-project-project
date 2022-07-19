@@ -6,6 +6,17 @@ block content
                 p(style="color: red;")=errorMessage
                 br
             h3.title-name ☕Join
+            div.col-12
+                form(method="POST" action="/users/certification")
+                    label(for="inputPhoneNum").form-label PhoneNumber
+                    input(type="text" placeholder="PhoneNumber").form-control#inputPhoneNum
+                    br
+                    button(type="submit").btn.btn-warning#Auth 인증하기 📌
+                    br
+                    br
+                p(style="color:green; display:none;")#AuthText 
+                p(style="color:red; display:none;")#AuthFailText 
+                br
             form(method="POST").row.g-3
                 div.col-md-6
                     label(for="inputUser").form-label User name
@@ -25,10 +36,74 @@ block content
                 div.col-12
                     label(for="inputRegion").form-label Region
                     input(type="text" placeholder="Region" name="region" required).form-control#inputRegion
+                div.col-12    
+                    input(type="hidden" name="phoneNum" required).form-control#AuthNum
                 div.col-12
                     button(type="submit").btn.btn-primary Sign in
+                    br
+                    br
                 hr
                 div.col-12
                     p 계정이 이미 있으신가요? 💬
                     br
                     a(href="/login").btn.btn-secondary Login &rarr;
+    script.
+        const button = document.getElementById("Auth");
+        const authNum = document.getElementById("AuthNum");
+        const authText = document.getElementById("AuthText");
+        const authFailText = document.getElementById("AuthFailText");
+        const phoneNum = document.getElementById("inputPhoneNum");
+        button.addEventListener("click",(event) => {
+            event.preventDefault();
+           if(!phoneNum.value) {
+               alert("핸드폰 번호를 입력해주세요");
+               return;
+            }
+            authNum.value = phoneNum.value;
+            requestAuthentication();
+        })
+        function requestAuthentication() {
+            const IMP = window.IMP;
+            IMP.init("#{shopPidCode}");
+            IMP.certification({
+                merchant_uid:`merchant_#{Date.now()}`,
+                m_redirect_url :`#{isHeroku ? domain : devDomain}/payments/success/mobile`,
+                popup:false
+             }, async function(rsp) {
+                if (rsp.success) {
+                    const data = await(
+                            await fetch("#{isHeroku ? domain : devDomain}/users/certifications",
+                            {
+                                method:"POST",
+                                headers: {"Content-Type": "application/json"},
+                                body: JSON.stringify({
+                                    imp_uid: rsp.imp_uid
+                                })
+                            }
+                        )).json();
+
+                    try {
+                        if(data.status === "success") {
+                            authText.style.display = "block";
+                            authText.innerText = data.message;
+                            phoneNum.disabled = true;
+                        } else {
+                            authFailText.style.display = "block";
+                            authFailText.innerText = data.message;
+                        }
+                    } catch(error) {
+                        console.log(error);
+                    }
+
+                 } else {
+                     authNum.value = "";
+                     phoneNum.value = "";
+                     phoneNum.innerText = "";
+                     authText.style.display = "none";
+                     alert("인증에 실패하였습니다. 에러 내용: " +  rsp.error_msg);
+                 }
+
+            })
+                
+
+        }

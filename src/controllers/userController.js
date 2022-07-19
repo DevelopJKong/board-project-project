@@ -5,6 +5,7 @@ import nodemailer from "nodemailer";
 import { v4 as uuidv4 } from "uuid";
 import Verification from "../models/Verification";
 
+/** 이메일 관련 파리미터 및 함수 [시작] */
 const config = {
   service: "gmail",
   host: "smtp.gmail.com",
@@ -27,6 +28,51 @@ const sendMailer = async (data) => {
   });
 };
 
+/** 이메일 관련 파리미터 및 함수 [끝]*/
+
+export const postCertification = async (req, res) => {
+  const { imp_uid } = req.body; // request의 body에서 imp_uid 추출
+  try {
+    const getToken = await (
+      await fetch("https://api.iamport.kr/users/getToken", {
+        method: "POST", // POST method
+        headers: { "Content-Type": "application/json" }, // "Content-Type": "application/json"
+        body: JSON.stringify({
+          imp_key: process.env.SHOP_API_KEY, // REST API키
+          imp_secret: process.env.SHOP_API_SECRET, // REST API Secret
+        }),
+      })
+    ).json();
+
+    const { access_token } = getToken.response; // 인증 토큰
+
+    const getCertifications = await (
+      await fetch(`https://api.iamport.kr/certifications/${imp_uid}`, {
+        // imp_uid 전달
+        method: "GET", // GET method
+        headers: { Authorization: access_token }, // 인증 토큰 Authorization header에 추가
+      })
+    ).json();
+
+    const certificationsInfo = getCertifications.response;
+
+    const { name, birth, phone } = certificationsInfo;
+
+    const user = await User.findOne({ phone });
+
+    if (user) {
+      return res.send({ status: "fail", message: "이미 존재하는 핸드폰 번호 입니다" });
+    }
+    return res.send({ status: "success", message: "인증이 완료 되었습니다 ☕" });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getCheck = (req, res) => {
+  return res.render("check");
+};
+
 export const postCheck = async (req, res) => {
   const { username, checkEmail } = req.body;
   const user = await User.findOne({ username });
@@ -38,16 +84,13 @@ export const postCheck = async (req, res) => {
   return res.redirect("/login");
 };
 
-export const getCheck = (req, res) => {
-  return res.render("check");
-};
-
 export const getJoin = (req, res) => {
   return res.render("join");
 };
 
 export const postJoin = async (req, res) => {
-  const { name, username, email, password, password2, region } = req.body;
+  const { name, username, email, password, password2, region, phoneNum } =
+    req.body;
 
   if (password !== password2) {
     return res.status(400).render("join", {
@@ -87,6 +130,7 @@ export const postJoin = async (req, res) => {
       email,
       password,
       region,
+      phoneNum,
     });
 
     await Verification.create({
@@ -142,7 +186,7 @@ export const postEdit = async (req, res) => {
     session: {
       user: { _id, avatar, email: sessionEmail, username: sessionUsername },
     },
-    body: { name, email, username, region },
+    body: { name, email, username, region, phoneNum },
     file,
   } = req;
   let searchParam = [];
@@ -169,6 +213,7 @@ export const postEdit = async (req, res) => {
       email,
       username,
       region,
+      phoneNum,
     },
 
     { new: true }
@@ -303,7 +348,7 @@ export const naverCallback = async (req, res) => {
        *    - 이전에는 소셜로그인으로 가입하지 않고
        *      그냥 가입하고 소셜로 로그인하면 일반 로그인이 되게끔 하였습니다
        * */
-      
+
       // req.session.loggedIn = true;
       // req.session.user = existingUser;
       // return res.redirect("/");
