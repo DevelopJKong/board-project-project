@@ -90,6 +90,9 @@ block content
                         } else {
                             authFailText.style.display = "block";
                             authFailText.innerText = data.message;
+                            authNum.value = "";
+                            phoneNum.value = "";
+                            phoneNum.innerText = "";
                         }
                     } catch(error) {
                         console.log(error);
